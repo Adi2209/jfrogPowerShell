@@ -3,7 +3,6 @@ pipelines:
     steps:
       - name: HelloWorldStep
         type: powershell
-        configuration:
         execution:
           onStart:
             - echo "Preparing for work..."
