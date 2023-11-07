@@ -1,6 +1,7 @@
 - name: build
   type: PowerShell
   configuration:
+    nodePool: my_windows_node_pool
     environmentVariables:
       env1: value1
       env2:
