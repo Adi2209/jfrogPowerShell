@@ -1,36 +1,37 @@
-- name: build
-  type: PowerShell
-  configuration:
-    nodePool: my_windows_node_pool
-    environmentVariables:
-      env1: value1
-      env2:
-        default: value2
-        description: Example Variable
-        values:
-          - value2
-          - value3
-        allowCustom: false
-    runtime:
-      type: image
-      image:
-        auto:
-          language: node
-          versions:
-            - "10.18"
-    inputResources:
-      - name: src
-    integrations:
-      - name: mySlack
-  execution:
-    onExecute:
-      - Push-Location $res_src_resourcePath
-      - npm install
-      - New-Item testresults -Type Directory
-      - New-Item codecoverage -Type Directory
-      - .\node_modules\.bin\mocha --recursive "tests/**/*.spec.js" -R mocha-junit-reporter --reporter-options mochaFile=testresults/testresults.xml
-      - .\node_modules\.bin\istanbul --include-all-sources cover -root "routes" node_modules/mocha/bin/_mocha -- -R spec-xunit-file --recursive "tests/**/*.spec.js"
-      - .\node_modules\.bin\istanbul report cobertura --dir codecoverage
-      - save_tests testresults/testresults.xml
-    onSuccess:
-      - send_notification mySlack "build completed"
+pipelines:
+  - name: build
+    type: PowerShell
+    configuration:
+      nodePool: my_windows_node_pool
+      environmentVariables:
+        env1: value1
+        env2:
+          default: value2
+          description: Example Variable
+          values:
+            - value2
+            - value3
+          allowCustom: false
+      runtime:
+        type: image
+        image:
+          auto:
+            language: node
+            versions:
+              - "10.18"
+      inputResources:
+        - name: src
+      integrations:
+        - name: mySlack
+    execution:
+      onExecute:
+        - Push-Location $res_src_resourcePath
+        - npm install
+        - New-Item testresults -Type Directory
+        - New-Item codecoverage -Type Directory
+        - .\node_modules\.bin\mocha --recursive "tests/**/*.spec.js" -R mocha-junit-reporter --reporter-options mochaFile=testresults/testresults.xml
+        - .\node_modules\.bin\istanbul --include-all-sources cover -root "routes" node_modules/mocha/bin/_mocha -- -R spec-xunit-file --recursive "tests/**/*.spec.js"
+        - .\node_modules\.bin\istanbul report cobertura --dir codecoverage
+        - save_tests testresults/testresults.xml
+      onSuccess:
+        - send_notification mySlack "build completed"
