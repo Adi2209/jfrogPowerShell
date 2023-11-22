@@ -15,6 +15,8 @@ pipelines:
       type: Bash
       configuration:
           affinityGroup: together
+          inputSteps:
+             - name: test_step
       execution:
         onStart:
           - echo {{ .Values.isTestPipeline }}
@@ -22,6 +24,8 @@ pipelines:
       type: Bash
       configuration:
           affinityGroup: together
+          inputSteps:
+             - name: test_step2
       execution:
         onStart:
           - echo {{ .Values.isTestPipeline }}
