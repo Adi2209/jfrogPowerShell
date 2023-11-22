@@ -5,7 +5,23 @@ pipelines:
     jfrogCliVersion: 2
   steps:
     - name: test_step
-      type: powershell
+      type: Bash
+      configuration:
+          affinityGroup: together
+      execution:
+        onStart:
+          - echo {{ .Values.isTestPipeline }}
+    - name: test_step2
+      type: Bash
+      configuration:
+          affinityGroup: together
+      execution:
+        onStart:
+          - echo {{ .Values.isTestPipeline }}
+    - name: test_step3
+      type: Bash
+      configuration:
+          affinityGroup: together
       execution:
         onStart:
           - echo {{ .Values.isTestPipeline }}
